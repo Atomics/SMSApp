@@ -19,6 +19,7 @@ app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter
     {
         Accounts.getAccountsList({
             action: 'getAccountsList',
+            enable: '1',
         },function success(data) {
             $scope.accountsList;
             if ( data.code == '200' )

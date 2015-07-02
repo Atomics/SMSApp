@@ -13,16 +13,14 @@
 		"about"           : "A propos"
 	},
 	"FORM" : {
-		"to"      : "A :",
-		"message" : "Votre message",
-		"send"    : "Envoyer",
-		"reset"   : "Reinitialiser",
-		"TOLIST"  : {
-			"Manjun"   : "Manjun",
-			"Matthieu" : "Matthieu",
-			"Papa"     : "Papa",
-			"Maman"    : "Maman"
-		}
+		"to"       : "A",
+		"message"  : "Votre message",
+		"send"     : "Envoyer",
+		"reset"    : "Reinitialiser",
+		"username" : "Nom d'utilisateur",
+		"from"     : "De",
+		"messages" : "Messages",
+		"date"     : "Date"
 	},
 	"ALERT" : {
 		"reset"              : "Le formulaire a été remis à zéro.",

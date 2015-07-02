@@ -13,10 +13,14 @@
 		"about"           : "关于"
 	},
 	"FORM" : {
-		"to"      : "至 :",
-		"message" : "您的留言",
-		"send"    : "发送",
-		"reset"   : "重�"
+		"to"       : "至",
+		"message"  : "您的留言",
+		"send"     : "发送",
+		"reset"    : "重�"
+		"username" : "Username",
+		"from"     : "From",
+		"messages" : "Messages",
+		"date"     : "Date"
 	},
 	"ALERT" : {
 		"reset"              : "表单被重置。",

@@ -13,16 +13,14 @@
 		"about"           : "About"
 	},
 	"FORM" : {
-		"to"      : "To :",
-		"message" : "Your message",
-		"send"    : "Send",
-		"reset"   : "Reset",
-		"TOLIST"  : {
-			"Manjun"   : "Manjun",
-			"Matthieu" : "Matthieu",
-			"Papa"     : "Dad",
-			"Maman"    : "Mom"
-		}
+		"to"       : "To",
+		"message"  : "Your message",
+		"send"     : "Send",
+		"reset"    : "Reset",
+		"username" : "Username",
+		"from"     : "From",
+		"messages" : "Messages",
+		"date"     : "Date"
 	},
 	"ALERT" : {
 		"reset"              : "The form was reset.",

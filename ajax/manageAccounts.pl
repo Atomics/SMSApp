@@ -87,22 +87,39 @@ sub getCurrentUser
 
 sub getAccountsList
 {
+    my %params = @_;
+    my $enable = $cgi->url_param('enable');
+
     my $dsn = "dbi:SQLite:dbname=$dbfile";
     my $dbh = DBI->connect($dsn, "", "", {
         PrintError       => 0,
         RaiseError       => 1,
         AutoCommit       => 1,
     });
+    
+    my $sql = 'SELECT id, username, comment, enable FROM accounts';
+    my @dbParams = ();
 
-    my $sql = 'SELECT id, username, apikey, comment FROM accounts WHERE enable = ?';
+    if( defined $enable )
+    {
+	if( $enable ne "1" and $enable ne "0" )
+        {
+       	    return result('code' => '400', 'msg' => 'Invalid Parameter Enable');
+        }
+        $sql .= " WHERE enable = ?";
+        push(@dbParams, $enable);
+    }
+
     my $sth = $dbh->prepare($sql);
-    $sth->execute(1);
+    $sth->execute(@dbParams);
+
     my %accounts;
     while (my $row = $sth->fetchrow_hashref)
     {
         $accounts{$row->{'id'}} = {
             'username' => $row->{'username'},
             'comment'  => $row->{'comment'},
+            'enable'   => $row->{'enable'},
         };
     }
     $dbh->disconnect();
