@@ -1,0 +1,16 @@
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th style="width: 50px;">Id</th>
+            <th style="width: 150px;">Free ID</th>
+            <th>Username</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="(id, account) in accountsList">
+            <td>#{{id}}</td>
+            <td>{{account.username}}</td>
+            <td>{{account.comment}}</td>
+        </tr>
+    </tbody>
+</table>

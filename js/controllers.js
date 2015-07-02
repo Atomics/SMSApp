@@ -116,3 +116,41 @@ app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter
     }
 
 });
+
+app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter, $translate, ngTableParams, Accounts ){
+    $scope.accountsList = {};
+    $scope.alerts = [];
+    
+    $scope.getAccountsList = function()
+    {
+        Accounts.getAccountsList({
+            action: 'getAccountsList',
+        },function success(data) {
+            $scope.accountsList;
+            if ( data.code == '200' )
+            {
+                $scope.accountsList = data.msg;
+                return true;
+            }
+            else if ( data.code == '403' )
+            {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.permissions-denied')});
+                return false;
+            }
+            else if ( data.code == '404' )
+            {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
+                return false;
+            }
+            else
+            {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.lists-accounts')});
+                return false;
+            }
+        },function error(data) {
+             $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.list-accounts')});
+        });
+    };
+
+    $scope.getAccountsList();
+});

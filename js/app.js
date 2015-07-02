@@ -23,11 +23,11 @@ var app = angular.module('myApp', [
 		  ]);
 		  
 app.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/home',            {templateUrl: 'template/home.html',                                     });
-	$routeProvider.when('/send-message',    {templateUrl: 'template/send-message.html',    controller: 'MessageCtrl'});
-	$routeProvider.when('/list-messages',   {templateUrl: 'template/list-messages.html',   controller: 'MessageCtrl'});
-	$routeProvider.when('/manage-contacts', {templateUrl: 'template/manage-contacts.html', controller: 'MessageCtrl'});
-	$routeProvider.when('/about',           {templateUrl: 'template/about.html'                                     });
+	$routeProvider.when('/home',            {templateUrl: 'template/home.html',                                      });
+	$routeProvider.when('/send-message',    {templateUrl: 'template/send-message.html',    controller: 'MessageCtrl' });
+	$routeProvider.when('/list-messages',   {templateUrl: 'template/list-messages.html',   controller: 'MessageCtrl' });
+	$routeProvider.when('/accounts',        {templateUrl: 'template/accounts.html',        controller: 'AccountCtrl' });
+	$routeProvider.when('/about',           {templateUrl: 'template/about.html'                                      });
 	$routeProvider.otherwise({redirectTo: '/home'});
 }]);
 

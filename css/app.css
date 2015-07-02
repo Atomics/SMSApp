@@ -58,3 +58,11 @@
 .button-form {
 	margin-top: 15px;
 }
+.table
+{
+	table-layout: fixed;
+}
+td
+{
+	word-wrap:break-word;
+}
