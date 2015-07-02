@@ -9,7 +9,7 @@
 		"home"		      : "Home",
 		"send-message"    : "Send a message",
 		"list-messages"   : "Messages List",
-		"manage-contacts" : "Manage contacts",
+		"manage-accounts" : "Manage accounts",
 		"about"           : "About"
 	},
 	"FORM" : {

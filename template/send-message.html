@@ -2,7 +2,7 @@
 	<div class="input-group input-group-lg">
 		<label class="input-group-addon" for="to" translate="FORM.to">To :</label>
 		<select class="form-control" id="to" ng-model="to">
-			<option ng-repeat="account in accountsList" value="{{account.username}}" translate="FORM.TOLIST.{{account.comment}}">{{account.username}}</option>
+			<option ng-repeat="account in accountsList" value="{{account.username}}">{{account.comment}}</option>
 		</select>
 	</div>
 </div>

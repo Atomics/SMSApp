@@ -9,20 +9,14 @@
 		"home"		      : "首页",
 		"send-message"	  : "发送消息",
 		"list-messages"   : "短信列表",
-		"manage-contacts" : "管理联系人",
+		"manage-accounts" : "管理联系人",
 		"about"           : "关于"
 	},
 	"FORM" : {
 		"to"      : "至 :",
 		"message" : "您的留言",
 		"send"    : "发送",
-		"reset"   : "重置",
-		"TOLIST"  : {
-			"Manjun"   : "曼均",
-			"Matthieu" : "嘉洋",
-			"Papa"     : "Jean-Luc",
-			"Maman"    : "Ghislaine"
-		}
+		"reset"   : "重�"
 	},
 	"ALERT" : {
 		"reset"              : "表单被重置。",
