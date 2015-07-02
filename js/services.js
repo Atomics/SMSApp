@@ -1,10 +1,3 @@
-'use strict';
-
-/* Services */
-
-
-// Demonstrate how to register services
-// In this case it is a simple value service.
 app.factory('Accounts', function($resource) {
     return $resource('ajax/manageAccounts.pl', {}, {
         getAccountsList: { method:'GET'  , params: { action: 'action' }, isArray: false },

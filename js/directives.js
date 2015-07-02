@@ -1,7 +1,3 @@
-'use strict';
-
-/* Directives */
-
 angular.module('myApp.directives', []).directive('bsNavbar', ['$location', function ($location) {
 	console.log('test');
   return {
@@ -20,10 +16,3 @@ angular.module('myApp.directives', []).directive('bsNavbar', ['$location', funct
     }
   };
 }]);
-
-angular.module('myApp.directives', []).
-  directive('appVersion', ['version', function(version) {
-    return function(scope, elm, attrs) {
-      elm.text(version);
-    };
-  }]);

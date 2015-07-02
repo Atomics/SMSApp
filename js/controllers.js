@@ -1,7 +1,3 @@
-'use strict';
-
-/* Controllers */
-
 app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter, $translate, ngTableParams, Accounts, Messages){
     $scope.accountsList;
     $scope.messagesList = {};
@@ -16,7 +12,6 @@ app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter
             action: 'getMessagesList'
         }, function success(data) {
             $scope.messagesList = data.msg;
-            console.log($scope.messagesList);
         });
     };
     

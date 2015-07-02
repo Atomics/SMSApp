@@ -18,10 +18,10 @@
 		"send"    : "Envoyer",
 		"reset"   : "Reinitialiser",
 		"TOLIST"  : {
-			"Manjun"   : "Léa",
+			"Manjun"   : "Manjun",
 			"Matthieu" : "Matthieu",
-			"Papa"     : "Jean-Luc",
-			"Maman"    : "Ghislaine"
+			"Papa"     : "Papa",
+			"Maman"    : "Maman"
 		}
 	},
 	"ALERT" : {

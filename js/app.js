@@ -1,5 +1,3 @@
-'use strict';
-
 var validLanguage = new Array('en','fr','zh');
 
 var elementsShared = angular.module( 'elementsShared', [] );
@@ -15,7 +13,6 @@ elementsShared.directive('ngBlur', ['$parse', function($parse) {
     };
 }]);
 
-// Declare app level module which depends on filters, and services
 var app = angular.module('myApp', [
 			  'ngRoute',
                           'ngResource',

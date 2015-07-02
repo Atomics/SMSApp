@@ -18,10 +18,10 @@
 		"send"    : "Send",
 		"reset"   : "Reset",
 		"TOLIST"  : {
-			"Manjun"   : "Super Monkey",
+			"Manjun"   : "Manjun",
 			"Matthieu" : "Matthieu",
-			"Papa"     : "Jean-Luc",
-			"Maman"    : "Ghislaine"
+			"Papa"     : "Dad",
+			"Maman"    : "Mom"
 		}
 	},
 	"ALERT" : {
