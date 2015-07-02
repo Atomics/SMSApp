@@ -1,0 +1,18 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Messages</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="message in messagesList">
+            <td>{{message.username}}</td>
+            <td>{{message.to}}</td>
+            <td>{{message.message}}</td>
+            <td>{{message.date}}</td>
+        </tr>
+    </tbody>
+</table>

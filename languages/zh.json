@@ -1,0 +1,40 @@
+{
+	"META" : {
+		"title"       : "发送短信 - Derasse.fr",
+		"description" : "一个网站通过自由移动的API发送一些手机短信",
+		"author"      : "Matthieu 'Atomics' DERASSE"
+	},
+	"MENU" : {
+		"title"           : "发送短信",
+		"home"		      : "首页",
+		"send-message"	  : "发送消息",
+		"list-messages"   : "短信列表",
+		"manage-contacts" : "管理联系人",
+		"about"           : "关于"
+	},
+	"FORM" : {
+		"to"      : "至 :",
+		"message" : "您的留言",
+		"send"    : "发送",
+		"reset"   : "重置",
+		"TOLIST"  : {
+			"Manjun"   : "曼均",
+			"Matthieu" : "嘉洋",
+			"Papa"     : "Jean-Luc",
+			"Maman"    : "Ghislaine"
+		}
+	},
+	"ALERT" : {
+		"reset"              : "表单被重置。",
+		"list-accounts"      : "撷取帐户时发生错误。",
+		"to-required"        : "请选择一个收件人。",
+		"message-required"   : "请写一个消息。",
+		"message-success"    : "您的消息已发送。",
+		"permissions-denied" : "您没有访问到这个页面的权限。",
+		"not-found"          : "找不到网页。",
+		"missing-element"    : "有些领域是空的。",
+		"messages-failed"    : "在发送邮件时发生错误。",
+		"messages-toomuch"   : "太多的信息被发送。请稍后再试。",
+		"user-current"       : "无法检索用户。"
+	}
+}

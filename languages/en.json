@@ -1,0 +1,40 @@
+{
+	"META" : {
+		"title"       : "Phone Message - Derasse.fr",
+		"description" : "A Website for send some phone message via the Free mobile API",
+		"author"      : "Matthieu 'Atomics' DERASSE"
+	},
+	"MENU" : {
+		"title"           : "Message App",
+		"home"		      : "Home",
+		"send-message"    : "Send a message",
+		"list-messages"   : "Messages List",
+		"manage-contacts" : "Manage contacts",
+		"about"           : "About"
+	},
+	"FORM" : {
+		"to"      : "To :",
+		"message" : "Your message",
+		"send"    : "Send",
+		"reset"   : "Reset",
+		"TOLIST"  : {
+			"Manjun"   : "Super Monkey",
+			"Matthieu" : "Matthieu",
+			"Papa"     : "Jean-Luc",
+			"Maman"    : "Ghislaine"
+		}
+	},
+	"ALERT" : {
+		"reset"              : "The form was reset.",
+		"list-accounts"      : "An error occurred while retrieving accounts.",
+		"to-required"        : "Please select a recipient.",
+		"message-required"   : "Please write a message.",
+		"message-success"    : "Your message has been sent.",
+		"permissions-denied" : "You don't have the permission to access to this page.",
+		"not-found"          : "Page not found.",
+		"missing-element"    : "Some field are empty.",
+		"messages-failed"    : "An error occurred while sending the message.",
+		"messages-toomuch"   : "Too many messages were sent. Try later.",
+		"user-current"       : "Unable to retrieve the current User."
+	}
+}
