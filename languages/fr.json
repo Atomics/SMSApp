@@ -20,7 +20,9 @@
 		"username" : "Nom d'utilisateur",
 		"from"     : "De",
 		"messages" : "Messages",
-		"date"     : "Date"
+		"date"     : "Date",
+		"enable"   : "Activé",
+        "action"   : "Action"
 	},
 	"ALERT" : {
 		"reset"              : "Le formulaire a été remis à zéro.",

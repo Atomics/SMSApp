@@ -1,0 +1,21 @@
+<div class="col-md-4 pull-left">
+    <div class="input-group input-group-lg">
+        <label class="input-group-addon" for="to"><span translate="FORM.to">To</span> :</label>
+        <select class="form-control" id="to" ng-model="to">
+            <option ng-repeat="account in accountsList" value="{{account.username}}">{{account.comment}}</option>
+        </select>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="col-md-12">
+    <textarea class="form-control messages" rows="10" placeholder="{{ 'FORM.message' | translate }}" ng-model="message" ></textarea>
+</div>
+<div class="clearfix"></div>
+<div class="button-form">
+    <div class="col-md-4 pull-left">
+        <button type="button" class="btn btn-danger btn-lg" translate="FORM.reset" ng-click="resetForm()">Reset</button>
+    </div>
+    <div class="col-md-4 pull-right">
+        <button type="button" style="padding-left: 50px; padding-right: 50px;" class="pull-right btn btn-success btn-lg" translate="FORM.send" ng-click="sendMessage()">Send</button>
+    </div>
+</div>

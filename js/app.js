@@ -14,99 +14,98 @@ elementsShared.directive('ngBlur', ['$parse', function($parse) {
 }]);
 
 var app = angular.module('myApp', [
-			  'ngRoute',
-                          'ngResource',
-                          'ngTable',
-			  'pascalprecht.translate',
-                          'ui.bootstrap',
-                          'elementsShared',
-		  ]);
-		  
+    'ngRoute',
+    'ngResource',
+    'pascalprecht.translate',
+    'ui.bootstrap',
+    'elementsShared',
+]);
+
 app.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/home',            {templateUrl: 'template/home.html',                                      });
-	$routeProvider.when('/send-message',    {templateUrl: 'template/send-message.html',    controller: 'MessageCtrl' });
-	$routeProvider.when('/list-messages',   {templateUrl: 'template/list-messages.html',   controller: 'MessageCtrl' });
-	$routeProvider.when('/accounts',        {templateUrl: 'template/accounts.html',        controller: 'AccountCtrl' });
-	$routeProvider.when('/about',           {templateUrl: 'template/about.html'                                      });
-	$routeProvider.otherwise({redirectTo: '/home'});
+    $routeProvider.when('/home',            {templateUrl: 'views/home.html',                                      });
+    $routeProvider.when('/send-message',    {templateUrl: 'views/send-message.html',    controller: 'MessageCtrl' });
+    $routeProvider.when('/list-messages',   {templateUrl: 'views/list-messages.html',   controller: 'MessageCtrl' });
+    $routeProvider.when('/accounts',        {templateUrl: 'views/accounts.html',        controller: 'AccountCtrl' });
+    $routeProvider.when('/about',           {templateUrl: 'views/about.html'                                      });
+    $routeProvider.otherwise({redirectTo: '/home'});
 }]);
 
 app.config(['$translateProvider', function($translateProvider){
-	$translateProvider.useStaticFilesLoader({
-		prefix: '/languages/',
-		suffix: '.json'
-	});
-	$translateProvider.determinePreferredLanguage(function () {
-		var language = window.navigator.userLanguage || window.navigator.language;
-		language = language.substring(0, 2);
-		if( validLanguage.indexOf(language) != -1 ) {
-			return language;
-		}
-		return 'en';
-	});
+    $translateProvider.useStaticFilesLoader({
+        prefix: '/languages/',
+        suffix: '.json'
+    });
+
+    $translateProvider.determinePreferredLanguage(function () {
+        var language = window.navigator.userLanguage || window.navigator.language;
+        language = language.substring(0, 2);
+
+        if( validLanguage.indexOf(language) != -1 ) {
+            return language;
+        }
+
+        return 'en';
+    });
 }]);
 
 app.run(function($rootScope, $location, $translate) {
-    $rootScope.alerts = [];	
+    $rootScope.alerts = []; 
     $rootScope.navActive = function(path) {
-            if ( $location.path() == path ) {
-                    return true;
-            } else {
-                    return false;
-            }
+        if ( $location.path() == path ) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
-        	
+
     $rootScope.getCurrentUser = function()
     {
         Accounts.getCurrentUser({
             action: 'getCurrentUser',
         },function success(data) {
             $scope.accountsList;
-            if ( data.code == '200' )
-            {
+            if ( data.code == '200' ) {
                 $rootScope.currentUser = data.msg;
                 return true;
             }
-            else if ( data.code == '403' )
-            {
+            else if ( data.code == '403' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.permissions-denied')});
                 return false;
             }
-            else if ( data.code == '404' )
-            {
+            else if ( data.code == '404' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
                 return false;
             }
-            else
-            {
+            else {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.user-current')});
                 return false;
             }
         },function error(data) {
-             $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.user-current')});
+            $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.user-current')});
         });    
     };
-    
+
     $rootScope.closeAlert = function(index) {
         $rootScope.alerts.splice(index, 1);
     };
 
     $rootScope.closeAllAlerts = function() {
         angular.forEach($rootScope.alerts, function(value, key) {
-               $rootScope.closeAlert(key);
+            $rootScope.closeAlert(key);
         });
     };
 
     $rootScope.changeLanguage = function (langKey) {
-            $translate.use(langKey);
+        $translate.use(langKey);
     };
-    
+
     $rootScope.activeLanguage = function (langKey) {
-            if ( $translate.use() == langKey ) {
-                    return true;
-            } else {
-                    return false;
-            }
+        if ( $translate.use() == langKey ) {
+            return true;
+        } else {
+            return false;
+        }
     };
 });
 

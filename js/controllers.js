@@ -1,4 +1,4 @@
-app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter, $translate, ngTableParams, Accounts, Messages){
+app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter, $translate, Accounts, Messages){
     $scope.accountsList;
     $scope.messagesList = {};
     $scope.message;
@@ -6,8 +6,7 @@ app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter
     $scope.alerts = [];
     
  
-    $scope.getMessagesList = function()
-    {
+    $scope.getMessagesList = function() {
         Messages.listMessages({
             action: 'getMessagesList'
         }, function success(data) {
@@ -15,30 +14,25 @@ app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter
         });
     };
     
-    $scope.getAccountsList = function()
-    {
+    $scope.getAccountsList = function() {
         Accounts.getAccountsList({
             action: 'getAccountsList',
             enable: '1',
         },function success(data) {
             $scope.accountsList;
-            if ( data.code == '200' )
-            {
+            if ( data.code == '200' ) {
                 $scope.accountsList = data.msg;
                 return true;
             }
-            else if ( data.code == '403' )
-            {
+            else if ( data.code == '403' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.permissions-denied')});
                 return false;
             }
-            else if ( data.code == '404' )
-            {
+            else if ( data.code == '404' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
                 return false;
             }
-            else
-            {
+            else {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.lists-accounts')});
                 return false;
             }
@@ -47,23 +41,14 @@ app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter
         });
     };
 
-    $scope.getMessagesList();
-
-    $scope.getAccountsList();
-
-
-
-    $scope.sendMessage= function()
-    {
+    $scope.sendMessage= function() {
         $rootScope.closeAllAlerts(); 
-        if ( ! $scope.to )
-        {
+        if ( ! $scope.to ) {
             $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.to-required')});
             return false;
         }
         
-        if ( ! $scope.message )
-        {
+        if ( ! $scope.message ) {
             $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.message-required')});
             return false;
         }
@@ -75,76 +60,66 @@ app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter
             to:  $scope.to,
             message: $scope.message
         },function success(data) {
-            if ( data.code == '200' )
-            {
+            if ( data.code == '200' ) {
                 $scope.respSendMessage = data.msg;
                 $scope.resetForm();
                 $rootScope.alerts.push({type: 'success', msg: $filter('translate')('ALERT.message-success')});
                 return true;
             }
-            else if ( data.code == '402' )
-            {
+            else if ( data.code == '402' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.messages-toomuch')});
                 return false;
             }
-            else if ( data.code == '403' )
-            {
+            else if ( data.code == '403' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.permissions-denied')});
                 return false;
             }
-            else if ( data.code == '404' )
-            {
+            else if ( data.code == '404' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
                 return false;
             }
-            else if ( data.code == '412' )
-            {
+            else if ( data.code == '412' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.missing-element')});
                 return false;
             }
-            else
-            {
+            else {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.messages-failed')});
                 return false;
             }
         });
     }
 
-    $scope.resetForm = function()
-    {
+    $scope.resetForm = function() {
         $scope.message = "";
         return true;
     }
 
+    $scope.getMessagesList();
+    $scope.getAccountsList();
 });
 
-app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter, $translate, ngTableParams, Accounts ){
+app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter, $translate, Accounts ){
     $scope.accountsList = {};
     $scope.alerts = [];
     
-    $scope.getAccountsList = function()
-    {
+    $scope.getAccountsList = function() {
         Accounts.getAccountsList({
             action: 'getAccountsList',
         },function success(data) {
             $scope.accountsList;
-            if ( data.code == '200' )
-            {
+            if ( data.code == '200' ) {
                 $scope.accountsList = data.msg;
                 return true;
             }
-            else if ( data.code == '403' )
-            {
+            else if ( data.code == '403' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.permissions-denied')});
                 return false;
             }
-            else if ( data.code == '404' )
-            {
+            else if ( data.code == '404' ) {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
                 return false;
             }
-            else
-            {
+            else {
                 $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.lists-accounts')});
                 return false;
             }

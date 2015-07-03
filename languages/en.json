@@ -20,7 +20,9 @@
 		"username" : "Username",
 		"from"     : "From",
 		"messages" : "Messages",
-		"date"     : "Date"
+		"date"     : "Date",
+		"enable"   : "Enable",
+        "action"   : "Action"
 	},
 	"ALERT" : {
 		"reset"              : "The form was reset.",

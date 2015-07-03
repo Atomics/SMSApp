@@ -16,11 +16,13 @@
 		"to"       : "至",
 		"message"  : "您的留言",
 		"send"     : "发送",
-		"reset"    : "重�"
+		"reset"    : "重??",
 		"username" : "Username",
 		"from"     : "From",
 		"messages" : "Messages",
-		"date"     : "Date"
+		"date"     : "Date",
+		"enable"   : "Enable",
+        "action"   : "Action"
 	},
 	"ALERT" : {
 		"reset"              : "表单被重置。",

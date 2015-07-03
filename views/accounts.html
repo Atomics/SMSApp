@@ -1,0 +1,27 @@
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th style="width: 50px;">Id</th>
+            <th style="width: 150px;">Free ID</th>
+            <th translate="FORM.username">Username</th>
+            <th style="width: 100px;" translate="FORM.enable" class="text-center">Enable</th>
+            <th style="width: 150px;" translate="FORM.action" class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="(id, account) in accountsList">
+            <td>#{{id}}</td>
+            <td>{{account.username}}</td>
+            <td>{{account.comment}}</td>
+            <td class="text-center">
+                <span class="glyphicon" ng-class="{'glyphicon-ok': account.enable, 'glyphicon-remove': ! account.enable}"></span>
+            </td>
+            <td data-title="'Action'" style="min-width:90px;" class="text-center">
+                <span class="glyphicon glyphicon-time clickable" ng-click="alert('Not ready yet')"></span>
+                <span class="glyphicon glyphicon-search clickable" ng-click="alert('Not ready yet')"></span>
+                <span class="glyphicon glyphicon-pencil clickable" ng-click="alert('Not ready yet')"></span>
+                <span class="glyphicon glyphicon-trash clickable" ng-click="alert('Not ready yet')"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
