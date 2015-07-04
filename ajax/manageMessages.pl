@@ -107,8 +107,8 @@ sub sendMessage
 
     my $t = localtime;
 
-    my $sql = "INSERT INTO messages ('username', 'to', 'message', 'date') VALUES (?, ?, ?, ?)";
-    my $sth = $dbh->prepare($sql);
+    $sql = "INSERT INTO messages ('username', 'to', 'message', 'date') VALUES (?, ?, ?, ?)";
+    $sth = $dbh->prepare($sql);
     $sth->execute($cgi->remote_user(), $user->{'comment'}, $cgi->param('message'), $t);
 
     $dbh->disconnect();
@@ -142,7 +142,9 @@ sub sendMessage
 }
 
 sub getMessagesList
-{    
+{
+    my $username = $cgi->url_param('username');
+    
     my $dsn = "dbi:SQLite:dbname=$dbfile";
     my $dbh = DBI->connect($dsn, "", "", {
         PrintError       => 0,
@@ -151,8 +153,14 @@ sub getMessagesList
     });
 
     my $sql = 'SELECT * FROM messages LIMIT 500';
+    my @sqlParams = ();
+    if( defined $username )
+    {
+        $sql .= ' WHERE to = ?';
+        push( @sqlParams, $username );
+    }
     my $sth = $dbh->prepare($sql);
-    $sth->execute();
+    $sth->execute(@sqlParams);
     my %messages;
     while (my $row = $sth->fetchrow_hashref)
     {
@@ -162,7 +170,7 @@ sub getMessagesList
             'message'  => $row->{'message'},
             'date'     => $row->{'date'},
         };
-   }
+    }
     $dbh->disconnect();
     return result('code' => '200', 'msg' => \%messages);
 }

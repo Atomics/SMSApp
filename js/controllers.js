@@ -101,6 +101,8 @@ app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter
 app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter, $translate, Accounts ){
     $scope.accountsList = {};
     $scope.alerts = [];
+    $scope.action = '';
+    $scope.actionUser = '';
     
     $scope.getAccountsList = function() {
         Accounts.getAccountsList({
@@ -126,6 +128,30 @@ app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter
         },function error(data) {
              $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.list-accounts')});
         });
+    };
+    
+    $scope.showHistories = function(id) {
+        $('#messagesHistories').modal('show');
+    };
+
+    $scope.showUser = function(id) {
+        $scope.action = 'show';
+        $('#manageUser').modal('show');
+    };
+
+    $scope.editUser = function(id) {
+        $scope.action = 'edit';
+        $('#manageUser').modal('show');
+    };
+
+    $scope.deleteUser = function(id) {
+        if( angular.isUndefined($scope.accountsList[id]) ) {
+            $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
+            return false;
+        }
+
+        $scope.actionUser = $scope.accountsList[id]; 
+        $('#deleteUser').modal('show');
     };
 
     $scope.getAccountsList();
