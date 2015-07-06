@@ -98,11 +98,11 @@ app.controller("MessageCtrl", function($rootScope, $scope, $routeParams, $filter
     $scope.getAccountsList();
 });
 
-app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter, $translate, Accounts ){
+app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter, $translate, Accounts, Messages ){
     $scope.accountsList = {};
     $scope.alerts = [];
     $scope.action = '';
-    $scope.actionUser = '';
+    $scope.actionUser = new Object();
     
     $scope.getAccountsList = function() {
         Accounts.getAccountsList({
@@ -127,11 +127,28 @@ app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter
             }
         },function error(data) {
              $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.list-accounts')});
+             return false;
         });
     };
     
     $scope.showHistories = function(id) {
-        $('#messagesHistories').modal('show');
+        if( angular.isUndefined($scope.accountsList[id]) ) {
+            $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
+            return false;
+        }
+
+        $scope.action = 'showHistories';
+        
+        $scope.actionUser = $scope.accountsList[id];
+        $scope.actionUser.id = id;
+        
+        Messages.listMessages({
+            action:   'getMessagesList',
+            username: $scope.actionUser.comment
+        }, function success(data) {
+            $scope.userMessagesList = data.msg;
+            $('#messagesHistories').modal('show');
+        });
     };
 
     $scope.showUser = function(id) {
@@ -150,9 +167,67 @@ app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter
             return false;
         }
 
-        $scope.actionUser = $scope.accountsList[id]; 
+        $scope.action = 'delete';
+
+        $scope.actionUser = $scope.accountsList[id];
+        $scope.actionUser.id = id;
+
         $('#deleteUser').modal('show');
     };
+    
+    $scope.actionDeleteUser = function() {
+        if( angular.isUndefined($scope.actionUser) || Object.keys($scope.actionUser).length == 0 ) {
+            $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
+            return false;
+        }
+        
+        if( angular.isUndefined($scope.action) || $scope.action != 'delete' ) {
+            $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.unknown')});
+            return false;
+        }
+        
+        Accounts.deleteUser({
+            action: $scope.action + 'User',
+            userId: $scope.actionUser.id
+        },function success(data) {
+            if ( data.code == '200' ) {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.delete-success')});
+                $scope.getAccountsList();
+                $('#deleteUser').modal('hide');
+                return true;
+            }
+            else if ( data.code == '403' ) {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.permissions-denied')});
+                return false;
+            }
+            else if ( data.code == '404' ) {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
+                return false;
+            }
+            else {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.unknown')});
+                return false;
+            }
+        },function error(data) {
+             $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.unknown')});
+             return false;
+        });
+    };
+
+    $('#deleteUser').on('hidden.bs.modal', function (e){
+        $scope.action = '';
+        $scope.actionUser = new Object();
+    });
+    
+    $('#manageUser').on('hidden.bs.modal', function (e){
+        $scope.action = '';
+        $scope.actionUser = new Object();
+    });
+    
+    $('#messagesHistories').on('hidden.bs.modal', function (e){
+        $scope.action = '';
+        $scope.actionUser = new Object();
+    });
 
     $scope.getAccountsList();
 });

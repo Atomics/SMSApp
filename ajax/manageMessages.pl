@@ -19,20 +19,28 @@ sub main
 {
     not header() and return result('code' => '420', 'msg' => 'Impossible to define header');
     not checkUser() and return result('code' => '403', 'msg' => 'Permission Denied');
-   
-    if ( ! defined $cgi->url_param('action') )
+    
+    my $params = $cgi->Vars;
+
+    if($params->{POSTDATA})
+    {
+        $params = decode_json($params->{POSTDATA});
+    }
+
+    if ( ! defined $params->{'action'} )
     {
         return result('code' => '404', 'msg' => 'Action is not define');
     }
-    my $action = $cgi->url_param('action');
-    
+
+    my $action = $params->{'action'};
+   
     if ( ! grep $_ eq $action, @actionList )
     {
          return result('code' => '501', 'msg' => 'This action doesn\'t exist');
     }
     
     no strict 'refs';
-    my $fnret = &$action();
+    my $fnret = &$action($params);
     if ( ! defined $fnret->{'code'})
     {
         print $fnret
@@ -83,12 +91,16 @@ sub checkUser
 
 sub sendMessage
 {
-    if ( ! defined $cgi->param('to') )
+    my ($params) = @_;
+    my $to       = $params->{'to'};
+    my $message  = $params->{'message'};
+
+    if ( ! defined $to )
     {
         return {'code' => '412', 'msg' => 'This action need to receive a "to" value'};
     }
     
-    if ( ! defined $cgi->param('message') )
+    if ( ! defined $message )
     {
         return {'code' => '412', 'msg' => 'This action need to receive a "message" value'};
     }
@@ -102,20 +114,20 @@ sub sendMessage
 
     my $sql = 'SELECT username, apikey, comment FROM accounts WHERE username = ? and enable = ?';
     my $sth = $dbh->prepare($sql);
-    $sth->execute($cgi->param('to') , 1);
+    $sth->execute($to , 1);
     my $user = $sth->fetchrow_hashref;
 
     my $t = localtime;
 
     $sql = "INSERT INTO messages ('username', 'to', 'message', 'date') VALUES (?, ?, ?, ?)";
     $sth = $dbh->prepare($sql);
-    $sth->execute($cgi->remote_user(), $user->{'comment'}, $cgi->param('message'), $t);
+    $sth->execute($cgi->remote_user(), $user->{'comment'}, $message, $t);
 
     $dbh->disconnect();
     
     my $ua = LWP::UserAgent->new(ssl_opts => { verify_hostname => 1 });
     $ua->ssl_opts( SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE, SSL_hostname => '', verify_hostname => 0 );
-    my $url = 'https://smsapi.free-mobile.fr/sendmsg?user=' . $user->{'username'} . '&pass=' . $user->{'apikey'} . '&msg=' . $cgi->remote_user() . ': ' . $cgi->param('message');
+    my $url = 'https://smsapi.free-mobile.fr/sendmsg?user=' . $user->{'username'} . '&pass=' . $user->{'apikey'} . '&msg=' . $cgi->remote_user() . ': ' . $message;
     my $resp = $ua->get($url);
     
     
@@ -143,7 +155,8 @@ sub sendMessage
 
 sub getMessagesList
 {
-    my $username = $cgi->url_param('username');
+    my ($params) = @_;
+    my $username = $params->{'username'};
     
     my $dsn = "dbi:SQLite:dbname=$dbfile";
     my $dbh = DBI->connect($dsn, "", "", {
@@ -152,16 +165,18 @@ sub getMessagesList
         AutoCommit       => 1,
     });
 
-    my $sql = 'SELECT * FROM messages LIMIT 500';
+    my $sql = 'SELECT * FROM messages';
     my @sqlParams = ();
     if( defined $username )
     {
-        $sql .= ' WHERE to = ?';
+        $sql .= " WHERE `to` = ?";
         push( @sqlParams, $username );
     }
+    
     my $sth = $dbh->prepare($sql);
     $sth->execute(@sqlParams);
     my %messages;
+    
     while (my $row = $sth->fetchrow_hashref)
     {
         $messages{$row->{'id'}} = {

@@ -2,6 +2,7 @@ app.factory('Accounts', function($resource) {
     return $resource('ajax/manageAccounts.pl', {}, {
         getAccountsList: { method:'GET'  , params: { action: 'action' }, isArray: false },
         getCurrentUser : { method:'GET'  , params: { action: 'action' }, isArray: false },
+        deleteUser     : { method:'POST' , params: { action: 'action', userId: 'userId' }, isArray: false },
     });
 });
 

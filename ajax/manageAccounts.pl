@@ -2,13 +2,13 @@
 use strict;
 use warnings;
 use CGI;
-use JSON;
+use JSON -convert_blessed_universally;
 use DBI;
 use CGI::Carp 'fatalsToBrowser';
 use Data::Dumper;
 
 my $cgi        = CGI->new();
-my @actionList = ('getAccountsList', 'getCurrentUser');
+my @actionList = ('getAccountsList', 'getCurrentUser', 'deleteUser');
 my $dbfile     = "../../database/sms.db";
 
 print main();
@@ -17,21 +17,27 @@ sub main
 {
     not header() and return result('code' => '420', 'msg' => 'Impossible to define header');
     not checkUser() and return result('code' => '403', 'msg' => 'Permission Denied');
-    
-    if ( ! defined $cgi->url_param('action') )
+    my $params = $cgi->Vars;
+
+    if($params->{POSTDATA})
+    {
+        $params = decode_json($params->{POSTDATA});
+    }
+
+    if ( ! defined $params->{'action'} )
     {
         return result('code' => '404', 'msg' => 'Action is not define');
     }
 
-    my $action = $cgi->url_param('action');
+    my $action = $params->{'action'};
 
     if ( ! grep $_ eq $action, @actionList )
     {
-         return result('code' => '501', 'msg' => 'This action doesn\'t exist');
+         return result('code' => '501', 'msg' => 'This ' . $action  . ' action doesn\'t exist');
     }
     
     no strict 'refs';
-    my $fnret = &$action($cgi->{'param'});
+    my $fnret = &$action($params);
     if ( ! defined $fnret->{'code'})
     {
         print $fnret
@@ -87,8 +93,8 @@ sub getCurrentUser
 
 sub getAccountsList
 {
-    my %params = @_;
-    my $enable = $cgi->url_param('enable');
+    my ($params) = @_;
+    my $enable = $params->{'enable'};
 
     my $dsn = "dbi:SQLite:dbname=$dbfile";
     my $dbh = DBI->connect($dsn, "", "", {
@@ -102,7 +108,7 @@ sub getAccountsList
 
     if( defined $enable )
     {
-	if( $enable ne "1" and $enable ne "0" )
+        if( $enable ne "1" and $enable ne "0" )
         {
        	    return result('code' => '400', 'msg' => 'Invalid Parameter Enable');
         }
@@ -124,4 +130,35 @@ sub getAccountsList
     }
     $dbh->disconnect();
     return result('code' => '200', 'msg' => \%accounts);
+}
+
+sub deleteUser
+{
+    my ($params) = @_;
+
+    if( $cgi->request_method ne 'POST' )
+    {
+        return result('code' => '450', 'msg' => 'Invalid Method');        
+    }
+
+    my $userId = $params->{'userId'};
+    if( not defined $userId or $userId !~ /^\d+$/ )
+    {
+        return result('code' => '400', 'msg' => 'Invalid Parameter userId');
+    }
+
+    my $dsn = "dbi:SQLite:dbname=$dbfile";
+    my $dbh = DBI->connect($dsn, "", "", {
+        PrintError       => 0,
+        RaiseError       => 1,
+        AutoCommit       => 1,
+    });
+    
+    my $sql = 'DELETE FROM accounts WHERE id = ?';
+
+    my $sth = $dbh->prepare($sql);
+    $sth->execute($userId);
+
+    $dbh->disconnect();
+    return result('code' => '200', 'msg' => 'User deleted !');
 }
