@@ -3,6 +3,7 @@ app.factory('Accounts', function($resource) {
         getAccountsList: { method:'GET'  , params: { action: 'action' }, isArray: false },
         getCurrentUser : { method:'GET'  , params: { action: 'action' }, isArray: false },
         deleteUser     : { method:'POST' , params: { action: 'action', userId: 'userId' }, isArray: false },
+        updateUser     : { method:'POST' , params: { action: 'action', user: 'user' }, isArray: false },
     });
 });
 

@@ -153,11 +153,19 @@ app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter
 
     $scope.showUser = function(id) {
         $scope.action = 'show';
+        
+        $scope.actionUser = $scope.accountsList[id];
+        $scope.actionUser.id = id;
+        
         $('#manageUser').modal('show');
     };
 
     $scope.editUser = function(id) {
         $scope.action = 'edit';
+        
+        $scope.actionUser = $scope.accountsList[id];
+        $scope.actionUser.id = id;
+        
         $('#manageUser').modal('show');
     };
 
@@ -174,6 +182,47 @@ app.controller("AccountCtrl", function($rootScope, $scope, $routeParams, $filter
 
         $('#deleteUser').modal('show');
     };
+
+    $scope.updateUser = function() {
+        if( angular.isUndefined($scope.actionUser) || Object.keys($scope.actionUser).length == 0 ) {
+            $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
+            return false;
+        }
+        
+        if( angular.isUndefined($scope.action) || $scope.action != 'edit' ) {
+            $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.unknown')});
+            return false;
+        }
+        
+        Accounts.updateUser({
+            action: $scope.action + 'User',
+            user:   $scope.actionUser,
+        },function success(data) {
+            if ( data.code == '200' ) {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.edit-success')});
+                $scope.getAccountsList();
+                $('#manageUser').modal('hide');
+                return true;
+            }
+            else if ( data.code == '403' ) {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.permissions-denied')});
+                return false;
+            }
+            else if ( data.code == '404' ) {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.not-found')});
+                return false;
+            }
+            else {
+                $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.unknown')});
+                return false;
+            }
+        },function error(data) {
+             $rootScope.alerts.push({type: 'danger', msg: $filter('translate')('ALERT.unknown')});
+             return false;
+        });
+    };
+
+
     
     $scope.actionDeleteUser = function() {
         if( angular.isUndefined($scope.actionUser) || Object.keys($scope.actionUser).length == 0 ) {

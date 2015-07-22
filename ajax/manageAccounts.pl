@@ -8,8 +8,31 @@ use CGI::Carp 'fatalsToBrowser';
 use Data::Dumper;
 
 my $cgi        = CGI->new();
-my @actionList = ('getAccountsList', 'getCurrentUser', 'deleteUser');
+my @actionList = ('getAccountsList', 'getCurrentUser', 'deleteUser', 'editUser');
 my $dbfile     = "../../database/sms.db";
+
+my %schema = (
+    'id' => {
+        'type'     => 'integer',
+        'editable' => 0,
+    },
+    'username' => {
+        'type'     => 'integer',
+        'editable' => 1,
+    },
+    'comment' => {
+        'type'     => 'string',
+        'editable' => 1,
+    },
+    'enable' => {
+        'type' => 'bool',
+        'editable' => 1,
+    },
+    'apikey' => {
+        'type'     => 'string',
+        'editable' => 1,
+    }
+);
 
 print main();
 
@@ -161,4 +184,83 @@ sub deleteUser
 
     $dbh->disconnect();
     return result('code' => '200', 'msg' => 'User deleted !');
+}
+
+sub editUser
+{
+    my ($params) = @_;
+    
+    if( $cgi->request_method ne 'POST' )
+    {
+        return result('code' => '450', 'msg' => 'Invalid Method');        
+    }
+
+    if( not defined $params->{'user'} )
+    {
+        return result('code' => '412', 'msg' => 'Missing Parameter user');
+    }
+
+    my %user   = %{$params->{'user'}};
+    my $userId = $user{'id'};
+    if( not defined $userId or $userId !~ /^\d+$/ )
+    {
+        return result('code' => '400', 'msg' => 'Invalid Parameter userId');
+    }
+
+    my $dsn = "dbi:SQLite:dbname=$dbfile";
+    my $dbh = DBI->connect($dsn, "", "", {
+        PrintError       => 0,
+        RaiseError       => 1,
+        AutoCommit       => 1,
+    });
+
+    my $sql = "UPDATE accounts SET ";
+    my @sqlParams = ();
+    my @errors = ();
+
+    foreach my $field ( keys %user )
+    {
+        if( not defined $schema{$field} )
+        {
+            push(@errors, 'Field ' . $field . ' does not exist...');
+            next;
+        }
+        if( not $schema{$field}{'editable'} )
+        {
+            next;
+        }
+        if( $user{$field} eq '' )
+        {
+            push(@errors, 'Field ' . $field . ' cannot be empty...');
+            next;
+        }
+        elsif( $schema{$field}{'type'} eq 'integer' and $user{$field} !~ /^\d+$/ )
+        {
+            push(@errors, 'Field ' . $field . ' should be an integer...');
+            next;
+        }
+        elsif( $schema{$field}{'type'} eq 'bool' and $user{$field} !~ /^(0|1)$/ )
+        {
+            push(@errors, 'Field ' . $field . ' should be a boolean...');
+            next;
+        }
+        $sql .= $field . ' = ? ,' ;
+        push(@sqlParams, $user{$field});
+    }
+
+    $sql = substr($sql, 0, -1);
+
+    $sql .= "WHERE id = ?";
+    push(@sqlParams, $user{'id'});
+        
+    if( scalar(@errors) )
+    {
+        return result('code' => '500', 'msg' => @errors);
+    }
+    
+    my $sth = $dbh->prepare($sql);
+    $sth->execute(@sqlParams);
+
+    $dbh->disconnect();
+    return result('code' => '200', 'msg' => 'User edited !');
 }

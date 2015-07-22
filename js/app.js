@@ -46,6 +46,7 @@ app.config(['$translateProvider', function($translateProvider){
 
         return 'en';
     });
+    $translateProvider.useSanitizeValueStrategy('escape');
 }]);
 
 app.run(function($rootScope, $location, $translate) {
