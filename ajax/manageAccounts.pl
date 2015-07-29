@@ -8,7 +8,7 @@ use CGI::Carp 'fatalsToBrowser';
 use Data::Dumper;
 
 my $cgi        = CGI->new();
-my @actionList = ('getAccountsList', 'getCurrentUser', 'deleteUser', 'editUser');
+my @actionList = ('getAccountsList', 'getCurrentUser', 'deleteUser', 'editUser', 'createUser');
 my $dbfile     = "../../database/sms.db";
 
 my %schema = (
@@ -263,4 +263,84 @@ sub editUser
 
     $dbh->disconnect();
     return result('code' => '200', 'msg' => 'User edited !');
+}
+
+sub createUser
+{
+    my ($params) = @_;
+    
+    if( $cgi->request_method ne 'POST' )
+    {
+        return result('code' => '450', 'msg' => 'Invalid Method');        
+    }
+
+    if( not defined $params->{'user'} )
+    {
+        return result('code' => '412', 'msg' => 'Missing Parameter user');
+    }
+
+    my %user = %{$params->{'user'}}; 
+    my $dsn  = "dbi:SQLite:dbname=$dbfile";
+    my $dbh  = DBI->connect($dsn, "", "", {
+        PrintError       => 0,
+        RaiseError       => 1,
+        AutoCommit       => 1,
+    });
+
+    my $sql       = "INSERT INTO accounts(";
+    my @listField = ();
+    my @sqlParams = ();
+    my @errors    = ();
+
+    foreach my $field ( keys %user )
+    {
+        if( not defined $schema{$field} )
+        {
+            push(@errors, 'Field ' . $field . ' does not exist...');
+            next;
+        }
+        if( not $schema{$field}{'editable'} )
+        {
+            next;
+        }
+        if( $user{$field} eq '' )
+        {
+            push(@errors, 'Field ' . $field . ' cannot be empty...');
+            next;
+        }
+        elsif( $schema{$field}{'type'} eq 'integer' and $user{$field} !~ /^\d+$/ )
+        {
+            push(@errors, 'Field ' . $field . ' should be an integer...');
+            next;
+        }
+        elsif( $schema{$field}{'type'} eq 'bool' and $user{$field} !~ /^(0|1)$/ )
+        {
+            push(@errors, 'Field ' . $field . ' should be a boolean...');
+            next;
+        }
+        
+        push(@listField, $field);
+        push(@sqlParams, $user{$field});
+    }
+
+    $sql .= join(',', @listField) . ') VALUES (';
+
+    foreach my $valueField ( @listField )
+    {
+        $sql .= ' ?,';
+    }
+    $sql = substr($sql, 0, -1);
+
+    $sql .= ")";
+        
+    if( scalar(@errors) )
+    {
+        return result('code' => '500', 'msg' => @errors);
+    }
+    
+    my $sth = $dbh->prepare($sql);
+    $sth->execute(@sqlParams);
+
+    $dbh->disconnect();
+    return result('code' => '200', 'msg' => 'User created !');
 }

@@ -1,3 +1,4 @@
+<button class="btn btn-default" type="button" style="margin-bottom: 10px; margin-left: 10px;" ng-click="createUser()">Create User</button>
 <table class="table table-hover table-striped">
     <thead>
         <tr>
@@ -87,6 +88,7 @@
                     </button>
                 </h4>
                 <h4 ng-show="action=='edit'" class="modal-title">Edit user {{actionUser.comment}}</h4>
+                <h4 ng-show="action=='create'" class="modal-title">Create user</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" role="form">
@@ -95,7 +97,7 @@
                             <div class="form-group">
                                 <label for="username" class="col-sm-3 control-label">Username :</label>
                                 <div class="col-sm-7">
-                                    <input type="text" ng-disabled="action!='edit'" class="form-control" id="username" data-ng-model="actionUser.comment" />
+                                    <input type="text" ng-disabled="action!='edit' && action!='create'" class="form-control" id="username" data-ng-model="actionUser.comment" />
                                 </div>
                             </div>
                         </div>
@@ -105,7 +107,7 @@
                             <div class="form-group">
                                 <label for="freeId" class="col-sm-3 control-label">Free Id :</label>
                                 <div class="col-sm-7">
-                                    <input type="text" ng-disabled="action!='edit'" class="form-control" id="freeId" data-ng-model="actionUser.username" />
+                                    <input type="text" ng-disabled="action!='edit' && action!='create'" class="form-control" id="freeId" data-ng-model="actionUser.username" />
                                 </div>
                             </div>
                         </div>
@@ -115,7 +117,7 @@
                             <div class="form-group">
                                 <label for="apiKey" class="col-sm-3 control-label">Api Key (Optionnal) :</label>
                                 <div class="col-sm-7">
-                                    <input type="text" ng-disabled="action!='edit'" class="form-control" id="apiKey" data-ng-model="actionUser.apiKey" />
+                                    <input type="text" ng-disabled="action!='edit' && action!='create'" class="form-control" id="apikey" data-ng-model="actionUser.apikey" />
                                 </div>
                             </div>
                         </div>
@@ -125,7 +127,7 @@
                             <div class="form-group">
                                 <label for="enable" class="col-sm-3 control-label">Enable :</label>
                                 <div class="col-sm-7">
-                                    <input id="enable" ng-disabled="action!='edit'" type="checkbox" style="margin-top:13px;" ng-true-value="1" ng-false-value="0" data-ng-model="actionUser.enable">
+                                    <input id="enable" ng-disabled="action!='edit' && action!='create'" type="checkbox" style="margin-top:13px;" ng-true-value="1" ng-false-value="0" data-ng-model="actionUser.enable">
                                 </div>
                             </div>
                         </div>
@@ -134,7 +136,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" ng-click="updateUser()">Update User</button>
+                <button type="button" class="btn btn-primary" ng-show="action=='edit'" ng-click="updateUser()">Update User</button>
+                <button type="button" class="btn btn-primary" ng-show="action=='create'" ng-click="actionCreateUser()">Create User</button>
             </div>
         </div>
     </div>
